@@ -176,7 +176,7 @@ namespace WeifenLuo.WinFormsUI.Docking
                 FloatWindows.Dispose();
                 Panes.Dispose();
                 DummyContent.Dispose();
-
+                m_dockPanelTheme?.CleanUp(this);
                 m_disposed = true;
             }
                 
