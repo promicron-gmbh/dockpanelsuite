@@ -36,7 +36,9 @@ namespace WeifenLuo.WinFormsUI.Docking
         {
             if (toolStrip == null)
                 return;
-
+            if(_stripBefore.ContainsKey(toolStrip))
+                return;
+            toolStrip.Disposed += ToolStripOnDisposed;
             _stripBefore[toolStrip] = new KeyValuePair<ToolStripRenderMode, ToolStripRenderer>(toolStrip.RenderMode, toolStrip.Renderer);
             if(ToolStripRenderer != null)
                 toolStrip.Renderer = ToolStripRenderer;
@@ -47,6 +49,16 @@ namespace WeifenLuo.WinFormsUI.Docking
                 {
                     ItemResetOwnerHack(item);
                 }
+            }
+        }
+
+        private void ToolStripOnDisposed(object sender, EventArgs e)
+        {
+            ToolStrip ts = sender as ToolStrip;
+            if (_stripBefore.ContainsKey(ts))
+            {
+                ts.Disposed -= ToolStripOnDisposed;
+                _stripBefore.Remove(ts);
             }
         }
 
