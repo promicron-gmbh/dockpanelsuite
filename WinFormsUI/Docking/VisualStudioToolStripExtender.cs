@@ -90,6 +90,7 @@ namespace WeifenLuo.WinFormsUI.Docking
 
             if (!strips.ContainsKey(strip))
             {
+                strip.Disposed += StripOnDisposed;
                 properties = new ToolStripProperties(strip) { VsVersion = version };
                 strips.Add(strip, properties);
             }
@@ -108,6 +109,16 @@ namespace WeifenLuo.WinFormsUI.Docking
                 theme.ApplyTo(strip);
             }
             properties.VsVersion = version;
+        }
+
+        private void StripOnDisposed(object sender, EventArgs e)
+        {
+            var toolStrip = sender as ToolStrip;
+            if(toolStrip != null && strips.ContainsKey(toolStrip))
+            {
+                strips.Remove(toolStrip);
+                toolStrip.Disposed -= StripOnDisposed;
+            }
         }
 
         public enum VsVersion
