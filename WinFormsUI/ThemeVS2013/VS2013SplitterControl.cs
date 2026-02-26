@@ -23,26 +23,32 @@ namespace WeifenLuo.WinFormsUI.ThemeVS2013
         {
             base.OnPaint(e);
 
-            Rectangle rect = ClientRectangle;
-            if (rect.Width <= 0 || rect.Height <= 0)
-                return;
-
-            switch (Alignment)
+            try
             {
-                case DockAlignment.Right:
-                case DockAlignment.Left:
-                    {
-                        Debug.Assert(SplitterSize == rect.Width);
-                        e.Graphics.FillRectangle(_horizontalBrush, rect);
-                    }
-                    break;
-                case DockAlignment.Bottom:
-                case DockAlignment.Top:
-                    {
-                        Debug.Assert(SplitterSize == rect.Height);
-                        e.Graphics.FillRectangle(_horizontalBrush, rect);
-                    }
-                    break;
+                Rectangle rect = ClientRectangle;
+                if (rect.Width <= 0 || rect.Height <= 0)
+                    return;
+
+                switch (Alignment)
+                {
+                    case DockAlignment.Right:
+                    case DockAlignment.Left:
+                        {
+                            //Debug.Assert(SplitterSize == rect.Width);
+                            e.Graphics.FillRectangle(_horizontalBrush, rect);
+                        }
+                        break;
+                    case DockAlignment.Bottom:
+                    case DockAlignment.Top:
+                        {
+                            //Debug.Assert(SplitterSize == rect.Height);
+                            e.Graphics.FillRectangle(_horizontalBrush, rect);
+                        }
+                        break;
+                }
+            }
+            catch (System.Exception exception)
+            {
             }
         }
     }
