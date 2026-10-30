@@ -1,5 +1,28 @@
 <Project>
  <PropertyGroup>
    <BaseIntermediateOutputPath>obj/$(MSBuildProjectName)</BaseIntermediateOutputPath>
+   <!-- Keep AssemblyInformationalVersion "1.0.0" as in the 3.1.0 build MCS ships today; .NET 8+ SDKs append the commit SHA. -->
+   <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+ </PropertyGroup>
+
+ <!--
+   The theme images are ResXFileRef bitmaps. Classic GenerateResource stores them
+   BinaryFormatter-serialized, which .NET 9+ no longer reads (NotSupportedException
+   when a theme is created). For net10.0-windows they are written preserialized
+   (Bitmap via ActivatorStream, read by System.Resources.Extensions, which ships in
+   the Microsoft.WindowsDesktop.App shared framework). The net40 output keeps the
+   classic format so existing .NET Framework consumers see the same resources;
+   build net40 with Visual Studio's MSBuild, because the dotnet CLI cannot write
+   non-string resources for .NET Framework without preserialization (MSB3823).
+ -->
+ <PropertyGroup Condition="'$(TargetFramework)' == 'net10.0-windows'">
+   <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+   <!--
+     WFO1000 (.NET 9+ WinForms analyzer, error by default) wants every public control
+     property to declare its designer serialization. That only matters for the Forms
+     designer, not at run time, and adding attributes to dozens of properties would
+     also change the net40 build that existing consumers depend on.
+   -->
+   <NoWarn>$(NoWarn);WFO1000</NoWarn>
  </PropertyGroup>
 </Project>
