@@ -1,12 +1,33 @@
-DockPanel Suite
-===============
+DockPanel Suite (MCS Fork)
+==========================
 
-[![Join the chat at https://gitter.im/dockpanelsuite/dockpanelsuite](https://img.shields.io/gitter/room/dockpanelsuite/dockpanelsuite.svg?style=flat-square)](https://gitter.im/dockpanelsuite/dockpanelsuite?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![NuGet Version](https://img.shields.io/nuget/v/DockPanelSuite.svg?style=flat-square)](https://www.nuget.org/packages/DockPanelSuite/)
-[![Build status](https://img.shields.io/github/workflow/status/dockpanelsuite/dockpanelsuite/CI?style=flat-square)](https://github.com/dockpanelsuite/dockpanelsuite/actions?query=workflow%3ACI)
+This is the [Promicron](https://www.promicron.de) fork of [DockPanelSuite](https://github.com/dockpanelsuite/dockpanelsuite), used in the MCS (Microscope Control Software) product.
 
-DockPanel Suite - The Visual Studio inspired docking library for .NET WinForms
+## Branch: `mcs/3.1.0`
 
-For more details, check out [http://dockpanelsuite.com](http://dockpanelsuite.com).
+The DLLs in MCS's `Vendor/DockPanelSuite` are built from this branch. It is based on upstream `Release_3.1.0`
+(AssemblyVersion 1.0.0.0, FileVersion 3.1.0.0, separate ThemeVS2005 assembly) with these changes:
 
-Visual Studio 2017 Community edition and above is recommended to compile the code base.
+- **DockContentHandler**: Dispose `TabPageContextMenuStrip` to prevent memory leak; fix AutoHide pane activation when `ActiveAutoHideContent` is null; disable `bRestoreFocus` `Activate()` call that causes unwanted MDI child activation
+- **DockPanel.AutoHideWindow**: Add try/catch in `SetTimerMouseTrack` to prevent unhandled exceptions
+- **DockPanel**: Call `DockPanelTheme.CleanUp()` during disposal to release theme resources
+- **ThemeBase**: Prevent duplicate ToolStrip registration; subscribe to `Disposed` event to clean up `_stripBefore` dictionary
+- **VisualStudioToolStripExtender**: Subscribe to `ToolStrip.Disposed` to remove entries from strips dictionary
+- **VS2013SplitterControl**: Add try/catch in `OnPaint`; remove `Debug.Assert` for SplitterSize
+- **DockContentHandler.TabAccentColor**: a coloured bar at the leading edge of a document tab and of its entry in the drop-down document list (VS2005 and VS2013 strips); MCS marks preview documents with it
+
+The same six fixes are on `mcs/3.0.4`, but MCS does not use a build of that branch: its assemblies differ
+(version 3.0.4.0, VS2005 theme inside the main assembly).
+
+## Building
+
+Use Visual Studio's MSBuild (not `dotnet build`: the theme projects need the .NET Framework resource generator):
+
+    MSBuild WinFormsUI\ThemeVS2005.csproj /restore /p:Configuration=Release /p:TargetFramework=net40
+    MSBuild WinFormsUI\ThemeVS2015.csproj /restore /p:Configuration=Release /p:TargetFramework=net40
+
+Both build `WeifenLuo.WinFormsUI.Docking.dll` as a dependency.
+
+## Upstream
+
+For the original project, see [dockpanelsuite/dockpanelsuite](https://github.com/dockpanelsuite/dockpanelsuite).
