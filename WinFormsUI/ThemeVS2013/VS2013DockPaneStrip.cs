@@ -1203,6 +1203,7 @@ namespace WeifenLuo.WinFormsUI.ThemeVS2013
             }
 
             g.FillRectangle(DockPane.DockPanel.Theme.PaintingService.GetBrush(paint), rect);
+            DrawHelper.DrawTabAccent(g, this, tab.Content, rectTab, 0, null);
             TextRenderer.DrawText(g, tab.Content.DockHandler.TabText, TextFont, rectText, text, DocumentTextFormat);
             if (image != null)
                 g.DrawImage(image, rectCloseButton);

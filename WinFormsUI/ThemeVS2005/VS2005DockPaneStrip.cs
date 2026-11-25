@@ -1407,6 +1407,10 @@ namespace WeifenLuo.WinFormsUI.Docking
                 TextRenderer.DrawText(g, tab.Content.DockHandler.TabText, TextFont, rectText, textColor, DocumentTextFormat);
             }
 
+            // Inset and clipped: the leading edge of these tabs is slanted, so a bar on the edge itself would
+            // stick out of the tab at the bottom and into the neighbour at the top.
+            DrawHelper.DrawTabAccent(g, this, tab.Content, rectTab, 3, path);
+
             if (rectTab.Contains(rectIcon) && DockPane.DockPanel.ShowDocumentIcon)
                 g.DrawIcon(tab.Content.DockHandler.Icon, rectIcon);
         }

@@ -22,6 +22,45 @@ namespace WeifenLuo.WinFormsUI.Docking
                 return new Rectangle(control.ClientRectangle.Right - rectangle.Right, rectangle.Y, rectangle.Width, rectangle.Height);
         }
 
+        /// <summary>Width of the bar <see cref="DrawTabAccent"/> draws.</summary>
+        public const int TabAccentWidth = 3;
+
+        /// <summary>
+        /// MCS: draws <see cref="DockContentHandler.TabAccentColor"/> of <paramref name="content"/> as a bar along
+        /// the leading edge of its document tab; nothing when the colour is empty.
+        /// </summary>
+        /// <param name="tabRect">The tab, already transformed for right-to-left.</param>
+        /// <param name="inset">Distance of the bar from the edge, for tab shapes whose edge is not vertical.</param>
+        /// <param name="clip">The tab outline, so the bar cannot leak out of a slanted tab; null for a rectangle.</param>
+        /// <remarks>
+        /// The bar sits in the gap left of the icon (8 px in both document strips), so the tab layout and the
+        /// room for the text stay as they were.
+        /// </remarks>
+        public static void DrawTabAccent(Graphics g, Control strip, IDockContent content, Rectangle tabRect, int inset, GraphicsPath clip)
+        {
+            Color color = content.DockHandler.TabAccentColor;
+            if (color.IsEmpty)
+                return;
+
+            int x = strip.RightToLeft == RightToLeft.Yes
+                ? tabRect.Right - inset - TabAccentWidth
+                : tabRect.Left + inset;
+            var bar = new Rectangle(x, tabRect.Top, TabAccentWidth, tabRect.Height);
+
+            GraphicsState state = g.Save();
+            try
+            {
+                if (clip != null)
+                    g.SetClip(clip, CombineMode.Intersect);
+                using (var brush = new SolidBrush(color))
+                    g.FillRectangle(brush, bar);
+            }
+            finally
+            {
+                g.Restore(state);
+            }
+        }
+
         public static GraphicsPath GetRoundedCornerTab(GraphicsPath graphicsPath, Rectangle rect, bool upCorner)
         {
             if (graphicsPath == null)
