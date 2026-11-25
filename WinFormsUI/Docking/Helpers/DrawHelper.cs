@@ -61,6 +61,42 @@ namespace WeifenLuo.WinFormsUI.Docking
             }
         }
 
+        /// <summary>
+        /// MCS: the entry for <paramref name="content"/> in the document list behind the tab strip's drop-down
+        /// button, with the same accent bar as its tab.
+        /// </summary>
+        /// <remarks>
+        /// The list is how an operator finds a document whose tab no longer fits the strip, so it has to show
+        /// the mark too; otherwise the marked documents can only be told apart while their tabs are visible.
+        /// </remarks>
+        public static ToolStripItem CreateWindowListItem(IDockContent content)
+        {
+            return new AccentMenuItem(content.DockHandler.TabText, content.DockHandler.Icon.ToBitmap(),
+                content.DockHandler.TabAccentColor);
+        }
+
+        // Paints after the renderer so the bar stays on top of the highlight of the hovered entry.
+        private sealed class AccentMenuItem : ToolStripMenuItem
+        {
+            private readonly Color _accent;
+
+            public AccentMenuItem(string text, Image image, Color accent) : base(text, image)
+            {
+                _accent = accent;
+            }
+
+            protected override void OnPaint(PaintEventArgs e)
+            {
+                base.OnPaint(e);
+                if (_accent.IsEmpty)
+                    return;
+
+                int x = RightToLeft == RightToLeft.Yes ? Width - TabAccentWidth : 0;
+                using (var brush = new SolidBrush(_accent))
+                    e.Graphics.FillRectangle(brush, x, 0, TabAccentWidth, Height);
+            }
+        }
+
         public static GraphicsPath GetRoundedCornerTab(GraphicsPath graphicsPath, Rectangle rect, bool upCorner)
         {
             if (graphicsPath == null)
