@@ -1203,6 +1203,7 @@ namespace WeifenLuo.WinFormsUI.ThemeVS2013
             }
 
             g.FillRectangle(DockPane.DockPanel.Theme.PaintingService.GetBrush(paint), rect);
+            DrawHelper.DrawTabAccent(g, this, tab.Content, rectTab, 0, null);
             TextRenderer.DrawText(g, tab.Content.DockHandler.TabText, TextFont, rectText, text, DocumentTextFormat);
             if (image != null)
                 g.DrawImage(image, rectCloseButton);
@@ -1324,7 +1325,8 @@ namespace WeifenLuo.WinFormsUI.ThemeVS2013
             foreach (TabVS2013 tab in Tabs)
             {
                 IDockContent content = tab.Content;
-                ToolStripItem item = SelectMenu.Items.Add(content.DockHandler.TabText, content.DockHandler.Icon.ToBitmap());
+                ToolStripItem item = DrawHelper.CreateWindowListItem(content);
+                SelectMenu.Items.Add(item);
                 item.Tag = tab.Content;
                 item.Click += new EventHandler(ContextMenuItem_Click);
             }

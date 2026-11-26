@@ -353,6 +353,29 @@ namespace WeifenLuo.WinFormsUI.Docking
             }
         }
 
+        private Color m_tabAccentColor = Color.Empty;
+        /// <summary>
+        /// MCS: colour of a bar at the leading edge of the document tab; <see cref="Color.Empty"/> draws none.
+        /// </summary>
+        /// <remarks>
+        /// Lets the application mark a kind of document (MCS: previews it may close in one go) without a
+        /// title suffix. A property of the content rather than of the theme: the theme palette colours every
+        /// tab of a state alike, and the tab strips are internal, so the application cannot draw it itself.
+        /// </remarks>
+        public Color TabAccentColor
+        {
+            get { return m_tabAccentColor; }
+            set
+            {
+                if (m_tabAccentColor == value)
+                    return;
+
+                m_tabAccentColor = value;
+                if (Pane != null)
+                    Pane.RefreshChanges();
+            }
+        }
+
         private DockState m_visibleState = DockState.Unknown;
         public DockState VisibleState
         {

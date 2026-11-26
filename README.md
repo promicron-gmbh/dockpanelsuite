@@ -3,7 +3,10 @@ DockPanel Suite (MCS Fork)
 
 This is the [Promicron](https://www.promicron.de) fork of [DockPanelSuite](https://github.com/dockpanelsuite/dockpanelsuite), used in MCS (Microscope Control Software).
 
-## Branch: `net10-multitarget`
+## Branch: `mcs/3.1.0-net10`
+
+`net10-multitarget` with `mcs/3.1.0` merged in: the build both MCS 1.13 (`mcs/3.1.0`) and
+MCS 1.14 (`net10-multitarget`) can use.
 
 Based on upstream `Release_3.1.0` (`dc18ab0`). That is the code MCS has shipped as
 `Vendor/DockPanelSuite/*.dll` (assembly version 1.0.0.0, file version 3.1.0.0): its
@@ -18,6 +21,10 @@ Fixes (cherry-picked from `mcs/3.0.4`):
 - **ThemeBase**: Prevent duplicate ToolStrip registration; drop disposed ToolStrips from `_stripBefore`
 - **VisualStudioToolStripExtender**: Drop disposed ToolStrips from `strips`
 - **VS2013SplitterControl**: try/catch in `OnPaint`; remove the `SplitterSize` `Debug.Assert`
+
+From `mcs/3.1.0`:
+
+- **DockContentHandler.TabAccentColor**: a coloured bar at the leading edge of a document tab and of its entry in the drop-down document list (VS2005 and VS2013 strips); MCS marks preview documents with it
 
 Targets: `net40` (drop-in for the current .NET Framework build) and `net10.0-windows`.
 On `net10.0-windows` the theme bitmaps are written as preserialized resources, so they
